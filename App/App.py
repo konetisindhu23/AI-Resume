@@ -161,8 +161,7 @@ def run():
 
 
     # Create the DB
-    db_sql = """CREATE DATABASE IF NOT EXISTS CV;"""
-    cursor.execute(db_sql)
+    
 
 
     # Create table user_data and user_feedback
