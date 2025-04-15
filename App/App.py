@@ -31,12 +31,15 @@ from streamlit_tags import st_tags
 from PIL import Image
 # pre stored data for prediction purposes
 from Courses import ds_course,web_course,android_course,ios_course,uiux_course,resume_videos,interview_videos
-import nltk
-import spacy
+import nltkimport spacy
 import pyresparser.resume_parser
 
-# Patch the spacy loader used inside pyresparser
-pyresparser.resume_parser.spacy.load = lambda *args, **kwargs: spacy.load("en_core_web_sm")
+# Load spaCy model separately before using it in the ResumeParser
+nlp = spacy.load("en_core_web_sm")
+
+# Then patch the ResumeParser to use the loaded nlp model
+pyresparser.resume_parser.spacy.load = lambda: nlp
+
 
 nltk.download('stopwords')
 
