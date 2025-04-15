@@ -39,7 +39,7 @@ import pyresparser.resume_parser
 nlp = spacy.load("en_core_web_sm")
 
 # Then patch the ResumeParser to use the loaded nlp model
-pyresparser.resume_parser.spacy.load = lambda: nlp
+
 
 
 nltk.download('stopwords')
