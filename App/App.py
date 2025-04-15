@@ -206,7 +206,7 @@ def run():
                         feed_email VARCHAR(50) NOT NULL,
                         feed_score VARCHAR(5) NOT NULL,
                         comments VARCHAR(100) NULL,
-                        Timestamp VARCHAR(50) NOT NULL,
+                        Timestamp VARCHAR(50) NOT NULL
                     );
                 """
     cursor.execute(tablef_sql)
