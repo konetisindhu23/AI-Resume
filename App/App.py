@@ -32,6 +32,12 @@ from PIL import Image
 # pre stored data for prediction purposes
 from Courses import ds_course,web_course,android_course,ios_course,uiux_course,resume_videos,interview_videos
 import nltk
+import spacy
+import pyresparser.resume_parser
+
+# Patch the spacy loader used inside pyresparser
+pyresparser.resume_parser.spacy.load = lambda *args, **kwargs: spacy.load("en_core_web_sm")
+
 nltk.download('stopwords')
 
 
