@@ -2,6 +2,7 @@
 
 
 ###### Packages Used ######
+import psycopg2
 import streamlit as st # core package used in this project
 import nltk
 nltk.download('stopwords')
@@ -94,8 +95,15 @@ def course_recommender(course_list):
 
 
 # sql connector
-connection = pymysql.connect(host='localhost',user='root',password='tamanna1',db='cv')
-cursor = connection.cursor()
+conn = psycopg2.connect(
+    host=os.getenv("POSTGRES_HOST"),
+    database=os.getenv("POSTGRES_DB"),
+    user=os.getenv("POSTGRES_USER"),
+    password=os.getenv("POSTGRES_PASSWORD"),
+    port=os.getenv("POSTGRES_PORT", 5432)
+)
+
+cursor = conn.cursor()
 
 
 # inserting miscellaneous data, fetched results, prediction and recommendation into user_data table
@@ -159,49 +167,51 @@ def run():
 
     # Create table user_data and user_feedback
     DB_table_name = 'user_data'
-    table_sql = "CREATE TABLE IF NOT EXISTS " + DB_table_name + """
-                    (ID INT NOT NULL AUTO_INCREMENT,
-                    sec_token varchar(20) NOT NULL,
-                    ip_add varchar(50) NULL,
-                    host_name varchar(50) NULL,
-                    dev_user varchar(50) NULL,
-                    os_name_ver varchar(50) NULL,
-                    latlong varchar(50) NULL,
-                    city varchar(50) NULL,
-                    state varchar(50) NULL,
-                    country varchar(50) NULL,
-                    act_name varchar(50) NOT NULL,
-                    act_mail varchar(50) NOT NULL,
-                    act_mob varchar(20) NOT NULL,
-                    Name varchar(500) NOT NULL,
-                    Email_ID VARCHAR(500) NOT NULL,
-                    resume_score VARCHAR(8) NOT NULL,
-                    Timestamp VARCHAR(50) NOT NULL,
-                    Page_no VARCHAR(5) NOT NULL,
-                    Predicted_Field BLOB NOT NULL,
-                    User_level BLOB NOT NULL,
-                    Actual_skills BLOB NOT NULL,
-                    Recommended_skills BLOB NOT NULL,
-                    Recommended_courses BLOB NOT NULL,
-                    pdf_name varchar(50) NOT NULL,
-                    PRIMARY KEY (ID)
-                    );
-                """
+    table_sql = """
+    CREATE TABLE IF NOT EXISTS user_data (
+        ID SERIAL PRIMARY KEY,
+        sec_token VARCHAR(20) NOT NULL,
+        ip_add VARCHAR(50),
+        host_name VARCHAR(50),
+        dev_user VARCHAR(50),
+        os_name_ver VARCHAR(50),
+        latlong VARCHAR(50),
+        city VARCHAR(50),
+        state VARCHAR(50),
+        country VARCHAR(50),
+        act_name VARCHAR(50) NOT NULL,
+        act_mail VARCHAR(50) NOT NULL,
+        act_mob VARCHAR(20) NOT NULL,
+        Name VARCHAR(500) NOT NULL,
+        Email_ID VARCHAR(500) NOT NULL,
+        resume_score VARCHAR(8) NOT NULL,
+        Timestamp VARCHAR(50) NOT NULL,
+        Page_no VARCHAR(5) NOT NULL,
+        Predicted_Field BYTEA NOT NULL,
+        User_level BYTEA NOT NULL,
+        Actual_skills BYTEA NOT NULL,
+        Recommended_skills BYTEA NOT NULL,
+        Recommended_courses BYTEA NOT NULL,
+        pdf_name VARCHAR(50) NOT NULL
+    );
+    """
+    
     cursor.execute(table_sql)
+    conn.commit()
 
 
     DBf_table_name = 'user_feedback'
     tablef_sql = "CREATE TABLE IF NOT EXISTS " + DBf_table_name + """
-                    (ID INT NOT NULL AUTO_INCREMENT,
+                    (ID SERIAL PRIMARY KEY,
                         feed_name varchar(50) NOT NULL,
                         feed_email VARCHAR(50) NOT NULL,
                         feed_score VARCHAR(5) NOT NULL,
                         comments VARCHAR(100) NULL,
                         Timestamp VARCHAR(50) NOT NULL,
-                        PRIMARY KEY (ID)
                     );
                 """
     cursor.execute(tablef_sql)
+    conn.commit()
 
 
     ###### CODE FOR CLIENT SIDE (USER) ######
