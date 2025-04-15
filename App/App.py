@@ -199,18 +199,16 @@ def run():
     conn.commit()
 
 
-    DBf_table_name = 'user_feedback'
-    tablef_sql = "CREATE TABLE IF NOT EXISTS " + DBf_table_name + """
-                    (ID SERIAL PRIMARY KEY,
-                        feed_name varchar(50) NOT NULL,
-                        feed_email VARCHAR(50) NOT NULL,
-                        feed_score VARCHAR(5) NOT NULL,
-                        comments VARCHAR(100) NULL,
-                        Timestamp VARCHAR(50) NOT NULL
-                    );
-                """
+    tablef_sql = """CREATE TABLE IF NOT EXISTS user_feedback (
+    ID SERIAL PRIMARY KEY,
+    feed_name VARCHAR(50) NOT NULL,
+    feed_email VARCHAR(50) NOT NULL,
+    feed_score VARCHAR(5) NOT NULL,
+    comments VARCHAR(100),
+    Timestamp VARCHAR(50) NOT NULL);"""
     cursor.execute(tablef_sql)
     conn.commit()
+
 
 
     ###### CODE FOR CLIENT SIDE (USER) ######
